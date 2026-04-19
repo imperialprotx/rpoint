@@ -300,9 +300,9 @@ textarea{resize:none;line-height:1.6}
         <div class="field" style="margin-bottom:0">
           <span class="flabel">Cover Photo</span>
           <div class="upload-zone" id="uz-cover">
-            <input type="file" accept="image/*" capture="environment" onchange="handleUpload(this,'uz-cover','fn-cover')">
+            <input type="file" accept="image/*" onchange="handleUpload(this,'uz-cover','fn-cover')">
             <div class="uz-icon">📷</div>
-            <div class="uz-text"><strong>Tap to open camera</strong><br>photograph the subject property</div>
+            <div class="uz-text"><strong>Tap to add photo</strong><br>camera or photo library</div>
             <div class="uz-done" id="fn-cover"></div>
           </div>
         </div>
@@ -323,6 +323,7 @@ textarea{resize:none;line-height:1.6}
         </div>
         <div class="field"><label class="flabel">Client Name</label><input type="text" id="f-client" placeholder="First Last" autocomplete="name"></div>
         <div class="field"><label class="flabel">Client Phone</label><input type="text" id="f-phone" placeholder="(000) 000-0000" inputmode="tel"></div>
+        <div class="field"><label class="flabel">Client Email</label><input type="text" id="f-email" placeholder="client@email.com" inputmode="email" autocomplete="email"></div>
         <div class="field"><label class="flabel">Year Built</label><input type="text" id="f-year" placeholder="e.g. 2005" inputmode="numeric"></div>
         <div class="field"><label class="flabel">Square Footage</label><input type="text" id="f-sqft" placeholder="e.g. 2,400" inputmode="numeric"></div>
         <div class="field">
@@ -488,8 +489,99 @@ textarea{resize:none;line-height:1.6}
         <div class="screen-eyebrow">Step 6 of 7 · Performance Verdict</div>
         <div class="screen-title">Foundation <em>Performance</em><br>Opinion</div>
       </div>
+
       <div class="card">
-        <div class="info-box" style="margin-top:0;margin-bottom:16px">The verdict reflects the full picture — elevation data, observed distress, site conditions, and professional judgment. It is independent of the elevation classification and may differ.</div>
+        <div class="field" style="margin-bottom:0">
+          <span class="flabel">Functional Utility</span>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;line-height:1.5">How has foundation movement affected the structure's day-to-day function? Select the most accurate description.</div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="fu-tiles">
+            <div class="fu-tile" id="fu-1" onclick="pickFU(1)" style="display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:14px;height:14px;border-radius:50%;background:var(--g-green);flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--g-green-txt)">Full Functional Utility</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:3px;line-height:1.4">All doors, windows, and systems function normally. No floor slope perceptible to occupants. Structure performing as designed.</div>
+              </div>
+              <div class="fu-ring" id="fur-1" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:white"><div class="fu-dot" style="width:9px;height:9px;border-radius:50%;background:white;display:none"></div></div>
+            </div>
+            <div class="fu-tile" id="fu-2" onclick="pickFU(2)" style="display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:14px;height:14px;border-radius:50%;background:var(--g-blue);flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--g-blue-txt)">Minimally Diminished Utility</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:3px;line-height:1.4">Minor cosmetic evidence present but no operational impact. Doors and windows function normally. No floor slope perceptible to occupants.</div>
+              </div>
+              <div class="fu-ring" id="fur-2" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:white"><div class="fu-dot" style="width:9px;height:9px;border-radius:50%;background:white;display:none"></div></div>
+            </div>
+            <div class="fu-tile" id="fu-3" onclick="pickFU(3)" style="display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:14px;height:14px;border-radius:50%;background:var(--g-amber);flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--g-amber-txt)">Diminished Functional Utility</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:3px;line-height:1.4">Measurable operational impact. One or more doors or windows sticking, racking, or requiring force to operate. Floor slope perceptible underfoot.</div>
+              </div>
+              <div class="fu-ring" id="fur-3" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:white"><div class="fu-dot" style="width:9px;height:9px;border-radius:50%;background:white;display:none"></div></div>
+            </div>
+            <div class="fu-tile" id="fu-4" onclick="pickFU(4)" style="display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:14px;height:14px;border-radius:50%;background:var(--g-red);flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--g-red-txt)">Significantly Impaired Utility</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:3px;line-height:1.4">Major operational failure. Multiple doors or windows non-functional. Visible floor slope. Structural separation visible to the naked eye. Daily function meaningfully compromised.</div>
+              </div>
+              <div class="fu-ring" id="fur-4" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:white"><div class="fu-dot" style="width:9px;height:9px;border-radius:50%;background:white;display:none"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-gap"></div>
+
+      <div class="card">
+        <div class="field" style="margin-bottom:0">
+          <span class="flabel">Detectability Without Equipment</span>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;line-height:1.5">Was movement or unlevelness noticeable to the naked eye or perceptible underfoot without the use of specialized measuring equipment?</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="det-tile" id="det-no" onclick="pickDet('no')" style="display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:white;transition:all 0.15s" id="detr-no"><div style="width:9px;height:9px;border-radius:50%;background:white;display:none" id="detd-no"></div></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--gray-800)">Not detectable without equipment</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Movement would not have been apparent without specialized elevation measurement tools</div>
+              </div>
+            </div>
+            <div class="det-tile" id="det-yes" onclick="pickDet('yes')" style="display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s">
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:white;transition:all 0.15s" id="detr-yes"><div style="width:9px;height:9px;border-radius:50%;background:white;display:none" id="detd-yes"></div></div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:var(--gray-800)">Observable without equipment</div>
+                <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Movement or slope was perceptible to the naked eye or underfoot without measuring tools</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="det-followup" style="display:none;margin-top:12px">
+            <div style="font-size:13px;color:var(--gray-600);margin-bottom:10px;line-height:1.5">Where was the unlevelness observable?</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div class="detloc-tile" id="detloc-ground" onclick="pickDetLoc('ground')" style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--gray-200);border-radius:10px;background:white;cursor:pointer;transition:all 0.15s">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--gray-200);flex-shrink:0;transition:background 0.15s" id="detlocd-ground"></div>
+                <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Main living areas (ground floor)</div>
+              </div>
+              <div class="detloc-tile" id="detloc-upper" onclick="pickDetLoc('upper')" style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--gray-200);border-radius:10px;background:white;cursor:pointer;transition:all 0.15s">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--gray-200);flex-shrink:0;transition:background 0.15s" id="detlocd-upper"></div>
+                <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Primarily or exclusively upper level</div>
+              </div>
+              <div class="detloc-tile" id="detloc-both" onclick="pickDetLoc('both')" style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--gray-200);border-radius:10px;background:white;cursor:pointer;transition:all 0.15s">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--gray-200);flex-shrink:0;transition:background 0.15s" id="detlocd-both"></div>
+                <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Both levels</div>
+              </div>
+            </div>
+            <div id="framing-flag" style="display:none;margin-top:12px;border-left:4px solid var(--g-amber);background:var(--g-amber-bg);border-radius:0 8px 8px 0;padding:12px 14px">
+              <div style="font-size:12px;font-weight:700;color:var(--g-amber-txt);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">⚠ Framing Consideration</div>
+              <div style="font-size:13px;color:var(--g-amber-txt);line-height:1.6">Upper-level-only movement warrants consideration of framing as a contributing or alternative cause. This distinction will be addressed in the performance opinion.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-gap"></div>
+
+      <div class="card">
+        <div class="info-box" style="margin-top:0;margin-bottom:16px">The verdict reflects the full picture — elevation data, functional utility, detectability, observed distress, and professional judgment. It is independent of the elevation classification and may differ.</div>
         <div class="field">
           <span class="flabel">Performance Verdict</span>
           <div class="verdict-tiles">
@@ -544,6 +636,33 @@ textarea{resize:none;line-height:1.6}
       <div class="rv-block" style="border-bottom:none"><div class="rv-lbl">PVR Zone</div><div class="rv-val" id="rv-pvr">—</div></div>
 
       <button class="gen-btn" onclick="doGenerate()">Generate Report with AI Opinion →</button>
+
+      <div style="margin:0 16px 16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px">Deliver Report</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button onclick="sendEmail()" style="display:flex;align-items:center;gap:12px;padding:16px;background:white;border:1.5px solid var(--gray-200);border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;width:100%">
+            <div style="width:40px;height:40px;background:#e8f2fd;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📧</div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--navy)">Email Report</div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:2px" id="email-to-label">Opens mail app with report summary</div>
+            </div>
+          </button>
+          <button onclick="sendText()" style="display:flex;align-items:center;gap:12px;padding:16px;background:white;border:1.5px solid var(--gray-200);border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;width:100%">
+            <div style="width:40px;height:40px;background:#f0faf3;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💬</div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--navy)">Text Report</div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:2px" id="text-to-label">Opens messages app</div>
+            </div>
+          </button>
+          <button onclick="shareReport()" style="display:flex;align-items:center;gap:12px;padding:16px;background:white;border:1.5px solid var(--gray-200);border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;width:100%">
+            <div style="width:40px;height:40px;background:#fffbeb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📤</div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--navy)">Share / More Options</div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:2px">AirDrop, WhatsApp, copy link &amp; more</div>
+            </div>
+          </button>
+        </div>
+      </div>
 
       <div style="text-align:center;padding:0 16px 20px;font-size:12px;color:var(--gray-400);line-height:1.6">
         R Point by Pier-less Foundation Services<br>inspectmyslab.com · Independent · Veteran-Owned
@@ -619,7 +738,7 @@ const FACTORS=[
 ];
 
 let S=0;
-let st={insp:null,inspName:'',inspLic:'',type:null,typeLabel:'',needsElev:false,verdict:null,elevTier:null,diff:null,deflRatio:null,tiltRate:null,tolStatus:null,spanFt:null};
+let st={insp:null,inspName:'',inspLic:'',type:null,typeLabel:'',needsElev:false,verdict:null,elevTier:null,diff:null,deflRatio:null,tiltRate:null,tolStatus:null,spanFt:null,fu:null,det:null,detLoc:null};
 let stressData={};
 let factorData={};
 
@@ -850,9 +969,85 @@ function calcTolerance(){
   st.spanFt=span;
 }
 
-
+function pickTier(n){
   st.elevTier=n;
   [0,1,2,3].forEach(i=>document.getElementById('tier'+i).classList.toggle('selected',i===n));
+}
+
+function pickFU(n){
+  st.fu=n;
+  const colors={1:'var(--g-green)',2:'var(--g-blue)',3:'var(--g-amber)',4:'var(--g-red)'};
+  const bgs={1:'var(--g-green-bg)',2:'var(--g-blue-bg)',3:'var(--g-amber-bg)',4:'var(--g-red-bg)'};
+  const bds={1:'var(--g-green-bd)',2:'var(--g-blue-bd)',3:'var(--g-amber-bd)',4:'var(--g-red-bd)'};
+  [1,2,3,4].forEach(i=>{
+    const tile=document.getElementById('fu-'+i);
+    const ring=document.getElementById('fur-'+i);
+    const dot=ring.querySelector('.fu-dot');
+    if(i===n){
+      tile.style.borderColor=`var(--g-${['','green','blue','amber','red'][i]}-bd)`;
+      tile.style.background=bgs[i];
+      ring.style.borderColor=colors[i];
+      ring.style.background=colors[i];
+      dot.style.display='block';
+    } else {
+      tile.style.borderColor='var(--gray-200)';
+      tile.style.background='white';
+      ring.style.borderColor='var(--gray-200)';
+      ring.style.background='white';
+      dot.style.display='none';
+    }
+  });
+}
+
+function pickDet(v){
+  st.det=v;
+  st.detLoc=null;
+  ['yes','no'].forEach(x=>{
+    const ring=document.getElementById('detr-'+x);
+    const dot=document.getElementById('detd-'+x);
+    const tile=document.getElementById('det-'+x);
+    if(x===v){
+      tile.style.borderColor='var(--blue)';
+      tile.style.background='var(--blue-light)';
+      ring.style.borderColor='var(--blue)';
+      ring.style.background='var(--blue)';
+      dot.style.display='block';
+    } else {
+      tile.style.borderColor='var(--gray-200)';
+      tile.style.background='white';
+      ring.style.borderColor='var(--gray-200)';
+      ring.style.background='white';
+      dot.style.display='none';
+    }
+  });
+  const stories=document.getElementById('f-stories').value;
+  const isMultiStory=stories==='2 Story'||stories==='1.5 Story';
+  const followup=document.getElementById('det-followup');
+  followup.style.display=(v==='yes'&&isMultiStory)?'block':'none';
+  document.getElementById('framing-flag').style.display='none';
+  ['ground','upper','both'].forEach(l=>{
+    document.getElementById('detloc-'+l).style.borderColor='var(--gray-200)';
+    document.getElementById('detloc-'+l).style.background='white';
+    document.getElementById('detlocd-'+l).style.background='var(--gray-200)';
+  });
+}
+
+function pickDetLoc(loc){
+  st.detLoc=loc;
+  ['ground','upper','both'].forEach(l=>{
+    const tile=document.getElementById('detloc-'+l);
+    const dot=document.getElementById('detlocd-'+l);
+    if(l===loc){
+      tile.style.borderColor='var(--blue)';
+      tile.style.background='var(--blue-light)';
+      dot.style.background='var(--blue)';
+    } else {
+      tile.style.borderColor='var(--gray-200)';
+      tile.style.background='white';
+      dot.style.background='var(--gray-200)';
+    }
+  });
+  document.getElementById('framing-flag').style.display=loc==='upper'?'block':'none';
 }
 
 function pickVerdict(v){
@@ -865,8 +1060,12 @@ function populateReview(){
   document.getElementById('rv-insp').textContent=st.inspName||'—';
   document.getElementById('rv-insp-sub').textContent=st.inspName?'TREC #'+st.inspLic+' · Foundation Specialist · Pier-less Foundation Services':'Select inspector in Step 1';
   document.getElementById('rv-addr').textContent=document.getElementById('f-addr').value||'—';
-  const c=document.getElementById('f-client').value,p=document.getElementById('f-phone').value;
+  const c=document.getElementById('f-client').value,p=document.getElementById('f-phone').value,e=document.getElementById('f-email').value;
   document.getElementById('rv-client').textContent=[c,p].filter(Boolean).join(' · ')||'—';
+  const emailLabel=document.getElementById('email-to-label');
+  if(emailLabel) emailLabel.textContent=e?'To: '+e:'Opens mail app with report summary';
+  const textLabel=document.getElementById('text-to-label');
+  if(textLabel) textLabel.textContent=p?'To: '+p:'Opens messages app';
   document.getElementById('rv-type').textContent=st.typeLabel||'—';
   document.getElementById('rv-found').textContent=document.getElementById('f-found').value||'—';
   document.getElementById('rv-yr').textContent=document.getElementById('f-year').value?'Built '+document.getElementById('f-year').value:'';
@@ -874,6 +1073,11 @@ function populateReview(){
   const tiers=['Within Normal Tolerance (≤ 3/4")','Monitor & Maintain (3/4"–1.5")','Elevated Deviation (1.5"–2.5")','Significant Differential Movement (≥ 2.5")'];
   document.getElementById('rv-ecls').textContent=st.elevTier!==null?tiers[st.elevTier]:'';
   document.getElementById('rv-pvr').textContent=document.getElementById('f-pvr').value||'—';
+  // FU and detectability in sub of diff block
+  const fuLabels={1:'Full Functional Utility',2:'Minimally Diminished Utility',3:'Diminished Functional Utility',4:'Significantly Impaired Utility'};
+  const detLabel=st.det==='no'?'Not detectable without equipment':st.det==='yes'?'Observable without equipment':'—';
+  const detLocLabel=st.detLoc==='ground'?'Ground floor':st.detLoc==='upper'?'Upper level only ⚠':st.detLoc==='both'?'Both levels':'';
+  document.getElementById('rv-ecls').textContent=(st.elevTier!==null?tiers[st.elevTier]:'')+(st.fu?' · '+(fuLabels[st.fu]||''):'');
   const vmap={
     g:{color:'#4a9e6f',bg:'#f0faf3',bd:'#b6dfc3',title:'Performing as Intended',sub:'Foundation fulfilling its structural function — no corrective action indicated'},
     b:{color:'#5c9ccf',bg:'#eef6fd',bd:'#b8d9f2',title:'Performing / Maintenance Recommended',sub:'Performing but proactive steps warranted to preserve long-term performance'},
@@ -903,11 +1107,97 @@ function doGenerate(){
   const stressLog=STRESS_ITEMS.filter(i=>stressData[i.id].sev).map(i=>`${i.name}: ${stressData[i.id].sev}${document.getElementById('sl-'+i.id).value?' — '+document.getElementById('sl-'+i.id).value:''}`).join('\n') || 'None logged';
   const factorLog=FACTORS.filter(f=>factorData[f.id].active).map(f=>`${f.label} (${factorData[f.id].classify||'unclassified'})`).join('\n')||'None logged';
 
+  const fuLabels={1:'Full Functional Utility',2:'Minimally Diminished Utility',3:'Diminished Functional Utility',4:'Significantly Impaired Utility'};
+  const detLabels={no:'Not detectable without specialized equipment',yes:'Observable without equipment'};
+  const detLocLabels={ground:'Ground floor / main living areas',upper:'Upper level only — framing consideration flagged',both:'Both levels'};
+  const fuText=st.fu?fuLabels[st.fu]:'Not recorded';
+  const detText=st.det?detLabels[st.det]:'Not recorded';
+  const detLocText=st.detLoc?detLocLabels[st.detLoc]:'';
   const addr=document.getElementById('f-addr').value||'Subject Property';
-  alert('Report data ready — AI opinion generation coming in next build phase.\n\nInspector: '+st.inspName+'\nProperty: '+addr+'\nVerdict: '+(st.verdict?vLabels[st.verdict]:'Not set')+'\nHighest: '+hiVal+'"\nLowest: '+loVal+'"\nDifferential: '+(st.diff!==null?st.diff.toFixed(1)+'"':'N/A'));
+  alert('Report data ready — AI opinion generation coming in next build phase.\n\nInspector: '+st.inspName+'\nProperty: '+addr+'\nVerdict: '+(st.verdict?vLabels[st.verdict]:'Not set')+'\nHighest: '+hiVal+'"\nLowest: '+loVal+'"\nDifferential: '+(st.diff!==null?st.diff.toFixed(1)+'"':'N/A')+'\nFunctional Utility: '+fuText+'\nDetectability: '+detText+(detLocText?'\nLocation: '+detLocText:''));
 }
 
-// INIT
+function buildEmailBody(){
+  const addr=document.getElementById('f-addr').value||'your property';
+  const date=document.getElementById('f-date').value||'';
+  const inspector=st.inspName||'Your Inspector';
+  const lic=st.inspLic||'';
+  const type=st.typeLabel||'Foundation Inspection';
+  const found=document.getElementById('f-found').value||'';
+  const pvr=document.getElementById('f-pvr').value||'';
+  const diff=st.diff!==null?st.diff.toFixed(1)+'"':'not recorded';
+  const tiers=['Within Normal Tolerance','Monitor & Maintain','Elevated Deviation','Significant Differential Movement'];
+  const elevCls=st.elevTier!==null?tiers[st.elevTier]:'';
+  const vLabels={
+    g:'Performing as Intended',
+    b:'Performing / Maintenance Recommended',
+    a:'Borderline / Mitigation Action',
+    r:'Not Performing / Corrective Action'
+  };
+  const verdict=st.verdict?vLabels[st.verdict]:'Pending';
+  const tolLine=st.deflRatio?`\nApproximate Deflection Ratio: ${st.deflRatio} | Approximate Tilt Rate: ${st.tiltRate}`:'';
+
+  return {
+    subject:`R Point Foundation Inspection Report — ${addr} — ${date}`,
+    body:`Dear ${document.getElementById('f-client').value||'Client'},
+
+Thank you for choosing Pier-less Foundation Services for your independent foundation evaluation. Your ${type} report for the property at ${addr} has been completed.
+
+INSPECTION SUMMARY
+──────────────────
+Property: ${addr}
+Inspection Type: ${type}
+Date: ${date}
+Foundation Type: ${found}
+PVR Zone: ${pvr}
+
+ELEVATION FINDINGS
+──────────────────
+Total Differential: approximately ${diff}
+Elevation Classification: ${elevCls}${tolLine}
+
+PERFORMANCE VERDICT
+──────────────────
+${verdict}
+
+Your full written report — including the elevation survey map, field observations, contributing factors analysis, and recommendations — will be delivered separately as a PDF document.
+
+If you have any questions about your report or the findings, please don't hesitate to reach out.
+
+${inspector}
+Foundation Specialist | TREC License #${lic}
+Pier-less Foundation Services LLC
+inspectmyslab.com | (281) 889-0135
+
+Independent · Unbiased · Veteran-Owned · No repairs sold · No referral fees accepted
+A Pier-less Foundation is Fear-less™`
+  };
+}
+
+function sendEmail(){
+  const email=document.getElementById('f-email').value;
+  const {subject,body}=buildEmailBody();
+  const mailto=`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href=mailto;
+}
+
+function sendText(){
+  const phone=document.getElementById('f-phone').value.replace(/\D/g,'');
+  const {body}=buildEmailBody();
+  const short=body.substring(0,300)+'...\n\nFull report to follow.';
+  const sms=`sms:${phone}&body=${encodeURIComponent(short)}`;
+  window.location.href=sms;
+}
+
+function shareReport(){
+  const {subject,body}=buildEmailBody();
+  if(navigator.share){
+    navigator.share({title:subject,text:body}).catch(()=>{});
+  } else {
+    const {subject:s,body:b}=buildEmailBody();
+    window.location.href=`mailto:?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(b)}`;
+  }
+}
 document.getElementById('f-date').value=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 document.getElementById('elev-map-card').style.display='none';
 document.getElementById('btn-back').style.display='none';
