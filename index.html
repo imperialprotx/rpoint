@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="R Point">
+<meta name="theme-color" content="#0a1628">
+<title>R Point by Pier-less</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#0a1628;--navy2:#112240;--blue:#1a6fd4;--blue-light:#e8f2fd;--cyan:#00b4d8;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;
+  --g-green:#4a9e6f;--g-green-bg:#f0faf3;--g-green-bd:#b6dfc3;--g-green-txt:#1d5c3a;
+  --g-blue:#5c9ccf;--g-blue-bg:#eef6fd;--g-blue-bd:#b8d9f2;--g-blue-txt:#1d5c8f;
+  --g-amber:#d97706;--g-amber-bg:#fffbeb;--g-amber-bd:#fcd34d;--g-amber-txt:#92400e;
+  --g-red:#d53636;--g-red-bg:#fff5f5;--g-red-bd:#fca5a5;--g-red-txt:#991b1b;
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(--navy)}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;background:var(--gray-100);overflow:hidden;position:relative}
+
+/* TOPBAR */
+.topbar{background:var(--navy);flex-shrink:0;border-bottom:3px solid var(--blue);padding:0 16px;height:58px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.brand{display:flex;align-items:center;gap:10px}
+.r-badge{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:white;font-style:italic;letter-spacing:-2px;font-family:Georgia,serif}
+.brand-words{line-height:1.15}
+.brand-name{font-size:16px;font-weight:700;color:white;letter-spacing:0.5px}
+.brand-by{font-size:10px;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase}
+.insp-chip{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.6);white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.insp-chip.set{color:var(--cyan);border-color:rgba(0,180,216,0.4);background:rgba(0,180,216,0.08)}
+
+/* STEP TRACK */
+.steptrack{background:var(--navy2);flex-shrink:0;display:flex;padding:0 4px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.stab{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 2px 6px;gap:4px;cursor:pointer}
+.stab-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.2s;flex-shrink:0}
+.stab.done .stab-dot{background:var(--blue)}
+.stab.active .stab-dot{background:var(--cyan);width:11px;height:11px}
+.stab-label{font-size:9px;color:rgba(255,255,255,0.28);letter-spacing:0.5px;text-transform:uppercase}
+.stab.done .stab-label{color:rgba(255,255,255,0.45)}
+.stab.active .stab-label{color:var(--cyan)}
+
+/* SCROLL */
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:88px}
+
+/* SCREEN HEAD */
+.screen-head{background:var(--navy);padding:18px 16px 16px}
+.screen-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+.screen-title{font-size:24px;font-weight:700;color:white;line-height:1.2}
+.screen-title em{color:var(--cyan);font-style:normal}
+
+/* CARDS */
+.card{background:white;border-bottom:1px solid var(--gray-200);padding:20px 16px}
+.card-gap{height:10px;background:var(--gray-100)}
+
+/* FIELDS */
+.field{margin-bottom:20px}
+.field:last-child{margin-bottom:0}
+.flabel{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;display:block}
+input[type=text],input[type=number],select,textarea{width:100%;padding:14px;font-size:16px;border:1.5px solid var(--gray-200);border-radius:10px;background:var(--gray-50);color:var(--gray-800);font-family:inherit;appearance:none;-webkit-appearance:none;outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);background:white;box-shadow:0 0 0 3px rgba(26,111,212,0.12)}
+textarea{resize:none;line-height:1.6}
+
+/* INSPECTOR TILES */
+.insp-tiles{display:flex;flex-direction:column;gap:10px}
+.insp-tile{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s;min-height:74px}
+.insp-tile:active{transform:scale(0.98)}
+.insp-tile.selected{border-color:var(--blue);background:var(--blue-light)}
+.insp-av{width:48px;height:48px;border-radius:50%;background:var(--navy);color:white;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
+.insp-tile.selected .insp-av{background:var(--blue)}
+.insp-info{flex:1}
+.insp-name{font-size:16px;font-weight:700;color:var(--gray-800)}
+.insp-tile.selected .insp-name{color:var(--blue)}
+.insp-lic{font-size:12px;color:var(--gray-400);margin-top:2px}
+.insp-check{width:26px;height:26px;border-radius:50%;border:2px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.insp-tile.selected .insp-check{background:var(--blue);border-color:var(--blue)}
+.chk{width:10px;height:6px;border-left:2.5px solid white;border-bottom:2.5px solid white;transform:rotate(-45deg) translateY(-1px);display:none}
+.insp-tile.selected .chk{display:block}
+
+/* TYPE TILES */
+.type-tiles{display:flex;flex-direction:column;gap:10px}
+.type-tile{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s}
+.type-tile:active{transform:scale(0.98)}
+.type-tile.selected{border-color:var(--blue);background:var(--blue-light)}
+.type-icon{font-size:22px;width:34px;text-align:center;flex-shrink:0}
+.type-info{flex:1}
+.type-name{font-size:15px;font-weight:700;color:var(--gray-800)}
+.type-tile.selected .type-name{color:var(--blue)}
+.type-sub{font-size:12px;color:var(--gray-400);margin-top:2px;line-height:1.4}
+.tbadge{font-size:10px;padding:4px 10px;border-radius:10px;font-weight:700;flex-shrink:0}
+.tbadge-e{background:#e8f2fd;color:var(--blue)}
+.tbadge-v{background:#f0faf3;color:var(--g-green)}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--gray-200);border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;background:var(--gray-50);position:relative;transition:all 0.15s}
+.upload-zone:active{transform:scale(0.98)}
+.upload-zone.filled{border-style:solid;border-color:var(--g-green);background:var(--g-green-bg)}
+.upload-zone input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.uz-icon{font-size:36px;margin-bottom:10px}
+.uz-text{font-size:15px;color:var(--gray-600);line-height:1.5}
+.uz-text strong{color:var(--blue)}
+.uz-done{font-size:14px;color:var(--g-green);font-weight:700;padding:6px 0;display:none}
+.upload-zone.filled .uz-done{display:block}
+.upload-zone.filled .uz-icon,.upload-zone.filled .uz-text{display:none}
+
+/* PVR */
+.pvr-chip{display:none;align-items:center;gap:8px;margin-top:10px;background:var(--blue-light);border:1px solid #b5d4f4;border-radius:24px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--blue)}
+.pvr-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+
+/* ELEV */
+.elev-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.elev-sub{font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:6px}
+.elev-input-wrap{display:flex;gap:0;border:1.5px solid var(--gray-200);border-radius:10px;overflow:hidden;background:var(--gray-50);transition:border-color 0.15s,box-shadow 0.15s}
+.elev-input-wrap:focus-within{border-color:var(--blue);background:white;box-shadow:0 0 0 3px rgba(26,111,212,0.12)}
+.sign-btn{width:44px;flex-shrink:0;background:var(--navy);color:white;border:none;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;-webkit-user-select:none;user-select:none;font-family:inherit}
+.sign-btn:active{background:var(--blue)}
+.sign-btn.positive{background:var(--g-green)}
+.sign-btn.negative{background:var(--g-red)}
+.elev-num{flex:1;padding:14px 10px;font-size:18px;font-weight:700;border:none;background:transparent;color:var(--gray-800);outline:none;min-width:0;font-family:inherit}
+.elev-num::placeholder{font-size:15px;font-weight:400;color:var(--gray-400)}
+.diff-card{display:none;background:var(--navy);border-radius:12px;padding:22px;text-align:center;margin-top:14px}
+.diff-big{font-size:52px;font-weight:900;color:white;line-height:1;font-style:italic;font-family:Georgia,serif}
+.diff-lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:6px}
+.diff-cls{font-size:15px;font-weight:700;margin-top:8px}
+
+/* TIER TILES */
+.tier-tiles{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.tier-tile{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid transparent;border-radius:12px;cursor:pointer;transition:all 0.15s}
+.tier-tile:active{transform:scale(0.98)}
+.tier-tile.selected{outline:3px solid var(--navy);outline-offset:1px}
+.tier-swatch{width:18px;height:18px;border-radius:50%;flex-shrink:0}
+.tier-info{flex:1}
+.tier-name{font-size:15px;font-weight:700}
+.tier-range{font-size:12px;margin-top:2px;opacity:0.75}
+.tier-ring{width:24px;height:24px;border-radius:50%;border:2px solid rgba(0,0,0,0.15);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:white}
+.tier-tile.selected .tier-ring{border-color:var(--navy);background:var(--navy)}
+.tier-ring-dot{width:9px;height:9px;border-radius:50%;background:white;display:none}
+.tier-tile.selected .tier-ring-dot{display:block}
+
+/* STRESS */
+.stress-list{display:flex;flex-direction:column;gap:8px}
+.stress-item{background:white;border:1.5px solid var(--gray-200);border-radius:10px;overflow:hidden;transition:border-color 0.15s}
+.stress-item.has-finding{border-color:var(--g-amber-bd)}
+.stress-head{padding:14px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.stress-name{font-size:15px;font-weight:600;color:var(--gray-800);flex:1}
+.sev-pills{display:flex;gap:5px;flex-shrink:0}
+.sev-pill{padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;border:1.5px solid var(--gray-200);background:var(--gray-50);color:var(--gray-500);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.sev-pill:active{transform:scale(0.95)}
+.sev-pill.sel-minor{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+.sev-pill.sel-moderate{background:#fed7aa;border-color:#fdba74;color:#9a3412}
+.sev-pill.sel-excessive{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+.stress-loc-wrap{display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)}
+.stress-item.has-finding .stress-loc-wrap{display:block}
+.stress-loc{width:100%;margin-top:10px;padding:10px 12px;font-size:14px;border:1.5px solid var(--gray-200);border-radius:8px;background:var(--gray-50);font-family:inherit;outline:none}
+.stress-loc:focus{border-color:var(--blue)}
+
+/* FACTORS */
+.factor-list{display:flex;flex-direction:column;gap:10px}
+.factor-item{border:1.5px solid var(--gray-200);border-radius:12px;background:white;overflow:hidden;transition:border-color 0.15s}
+.factor-item.active{border-color:var(--blue)}
+.factor-head{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer}
+.factor-head:active{background:var(--gray-50)}
+.factor-ico{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.factor-lbl{flex:1;font-size:15px;font-weight:700;color:var(--gray-800)}
+.factor-item.active .factor-lbl{color:var(--blue)}
+.factor-tog{width:28px;height:28px;border-radius:50%;border:2px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gray-400);transition:all 0.2s;flex-shrink:0}
+.factor-item.active .factor-tog{background:var(--blue);border-color:var(--blue);color:white}
+.factor-body{display:none;padding:0 16px 16px;border-top:1px solid var(--gray-100)}
+.factor-item.active .factor-body{display:block}
+.factor-fl{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px;margin-top:14px;display:block}
+.factor-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.classify-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cpill{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid var(--gray-200);background:white;cursor:pointer;color:var(--gray-600);transition:all 0.15s}
+.cpill:active{transform:scale(0.95)}
+.cpill.cp-obs{border-color:var(--g-amber-bd);background:var(--g-amber-bg);color:var(--g-amber-txt)}
+.cpill.cp-pre{border-color:var(--g-blue-bd);background:var(--g-blue-bg);color:var(--g-blue-txt)}
+.cpill.cp-mon{border-color:var(--g-green-bd);background:var(--g-green-bg);color:var(--g-green-txt)}
+
+/* VERDICT TILES */
+.verdict-tiles{display:flex;flex-direction:column;gap:10px}
+.verdict-tile{display:flex;align-items:center;gap:14px;padding:18px 16px;border:2px solid var(--gray-200);border-radius:12px;background:white;cursor:pointer;transition:all 0.15s}
+.verdict-tile:active{transform:scale(0.98)}
+.vstripe{width:6px;height:50px;border-radius:3px;flex-shrink:0}
+.vinfo{flex:1}
+.vtitle{font-size:15px;font-weight:700;line-height:1.3}
+.vsub{font-size:12px;color:var(--gray-600);margin-top:4px;line-height:1.4}
+.verdict-tile.vg{border-color:var(--g-green-bd);background:var(--g-green-bg)}
+.verdict-tile.vg .vtitle{color:var(--g-green-txt)}
+.verdict-tile.vb{border-color:var(--g-blue-bd);background:var(--g-blue-bg)}
+.verdict-tile.vb .vtitle{color:var(--g-blue-txt)}
+.verdict-tile.va{border-color:var(--g-amber-bd);background:var(--g-amber-bg)}
+.verdict-tile.va .vtitle{color:var(--g-amber-txt)}
+.verdict-tile.vr{border-color:var(--g-red-bd);background:var(--g-red-bg)}
+.verdict-tile.vr .vtitle{color:var(--g-red-txt)}
+.verdict-tile.selected{outline:3px solid var(--navy);outline-offset:2px}
+
+/* INFO BOX */
+.info-box{border-left:4px solid var(--blue);background:var(--blue-light);border-radius:0 8px 8px 0;padding:12px 14px;font-size:13px;color:var(--gray-800);line-height:1.6;margin-top:12px}
+.info-box.amber{border-color:var(--g-amber);background:var(--g-amber-bg);color:var(--g-amber-txt)}
+.info-box.green{border-color:var(--g-green);background:var(--g-green-bg);color:var(--g-green-txt)}
+
+/* REVIEW */
+.rv-head{background:var(--navy);padding:20px 16px}
+.rv-block{background:white;border-bottom:1px solid var(--gray-100);padding:16px}
+.rv-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);margin-bottom:4px}
+.rv-val{font-size:16px;font-weight:700;color:var(--navy);line-height:1.3}
+.rv-sub{font-size:13px;color:var(--gray-600);margin-top:3px}
+.verdict-banner{border-radius:12px;padding:18px 16px;display:flex;align-items:center;gap:14px;margin:12px 16px;border:1.5px solid var(--gray-200)}
+.vb-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0}
+.vb-title{font-size:16px;font-weight:700;line-height:1.3}
+.vb-sub{font-size:12px;margin-top:4px;opacity:0.8}
+.gen-btn{display:block;margin:0 16px 16px;width:calc(100% - 32px);padding:18px;background:var(--navy);color:white;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.3px}
+.gen-btn:active{background:#071020;transform:scale(0.98)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:white;border-top:1px solid var(--gray-200);padding:10px 16px;padding-bottom:max(10px,env(safe-area-inset-bottom));display:flex;gap:10px;z-index:100}
+.btn-back{flex:0 0 56px;height:54px;border:1.5px solid var(--gray-200);border-radius:12px;background:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-600)}
+.btn-back:active{background:var(--gray-100)}
+.btn-next{flex:1;height:54px;background:var(--blue);color:white;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-next:active{background:#1558b0;transform:scale(0.98)}
+
+/* SCREEN VISIBILITY */
+.screen{display:none}
+.screen.active{display:block}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="r-badge">R</div>
+      <div class="brand-words">
+        <div class="brand-name">R Point</div>
+        <div class="brand-by">by Pier-less</div>
+      </div>
+    </div>
+    <div class="insp-chip" id="insp-chip">Select inspector</div>
+  </div>
+
+  <!-- STEP TRACK -->
+  <div class="steptrack">
+    <div class="stab active" id="st0" onclick="nav(0)"><div class="stab-dot"></div><div class="stab-label">Setup</div></div>
+    <div class="stab" id="st1" onclick="nav(1)"><div class="stab-dot"></div><div class="stab-label">Property</div></div>
+    <div class="stab" id="st2" onclick="nav(2)"><div class="stab-dot"></div><div class="stab-label">Elevation</div></div>
+    <div class="stab" id="st3" onclick="nav(3)"><div class="stab-dot"></div><div class="stab-label">Stress</div></div>
+    <div class="stab" id="st4" onclick="nav(4)"><div class="stab-dot"></div><div class="stab-label">Factors</div></div>
+    <div class="stab" id="st5" onclick="nav(5)"><div class="stab-dot"></div><div class="stab-label">Verdict</div></div>
+    <div class="stab" id="st6" onclick="nav(6)"><div class="stab-dot"></div><div class="stab-label">Review</div></div>
+  </div>
+
+  <div class="scroll-area">
+
+    <!-- SCREEN 0: SETUP -->
+    <div class="screen active" id="sc0">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 1 of 7 · Inspection Setup</div>
+        <div class="screen-title">Select <em>Inspector</em><br>&amp; Type</div>
+      </div>
+      <div class="card">
+        <div class="field">
+          <span class="flabel">Inspector</span>
+          <div class="insp-tiles">
+            <div class="insp-tile" id="it-neil" onclick="pickInsp('neil','Neil Arnold','23450')">
+              <div class="insp-av" id="av-neil">NA</div>
+              <div class="insp-info"><div class="insp-name">Neil Arnold</div><div class="insp-lic">Foundation Specialist · TREC #23450</div></div>
+              <div class="insp-check"><div class="chk"></div></div>
+            </div>
+            <div class="insp-tile" id="it-kevin" onclick="pickInsp('kevin','Kevin Cunningham','23460')">
+              <div class="insp-av" id="av-kevin">KC</div>
+              <div class="insp-info"><div class="insp-name">Kevin Cunningham</div><div class="insp-lic">Foundation Specialist · TREC #23460</div></div>
+              <div class="insp-check"><div class="chk"></div></div>
+            </div>
+            <div class="insp-tile" id="it-nathan" onclick="pickInsp('nathan','Nathan Cartwright','24069')">
+              <div class="insp-av" id="av-nathan">NC</div>
+              <div class="insp-info"><div class="insp-name">Nathan Cartwright</div><div class="insp-lic">Foundation Specialist · TREC #24069</div></div>
+              <div class="insp-check"><div class="chk"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-gap"></div>
+      <div class="card">
+        <div class="field">
+          <span class="flabel">Inspection Type</span>
+          <div class="type-tiles">
+            <div class="type-tile" id="tt-lb" onclick="pickType('lb','Level B',true)"><div class="type-icon">📏</div><div class="type-info"><div class="type-name">Level B</div><div class="type-sub">Full elevation survey + performance opinion</div></div><div class="tbadge tbadge-e">ELEV</div></div>
+            <div class="type-tile" id="tt-la" onclick="pickType('la','Level A',false)"><div class="type-icon">🔍</div><div class="type-info"><div class="type-name">Level A</div><div class="type-sub">Visual assessment + performance opinion</div></div><div class="tbadge tbadge-v">VISUAL</div></div>
+            <div class="type-tile" id="tt-cl" onclick="pickType('cl','Foundation Clearance',true)"><div class="type-icon">📄</div><div class="type-info"><div class="type-name">Foundation Clearance</div><div class="type-sub">Lender / underwriter clearance document</div></div><div class="tbadge tbadge-e">ELEV</div></div>
+            <div class="type-tile" id="tt-sw" onclick="pickType('sw','Structural Warranty',true)"><div class="type-icon">🏗️</div><div class="type-info"><div class="type-name">Structural Warranty</div><div class="type-sub">Builder warranty / 11-month evaluation</div></div><div class="tbadge tbadge-e">ELEV</div></div>
+            <div class="type-tile" id="tt-es" onclick="pickType('es','Precision Elevation Survey',true)"><div class="type-icon">📐</div><div class="type-info"><div class="type-name">Precision Elevation Survey</div><div class="type-sub">Data collection — no opinion package</div></div><div class="tbadge tbadge-e">ELEV</div></div>
+            <div class="type-tile" id="tt-co" onclick="pickType('co','Commercial Evaluation',true)"><div class="type-icon">🏢</div><div class="type-info"><div class="type-name">Commercial Evaluation</div><div class="type-sub">Commercial / investment property</div></div><div class="tbadge tbadge-e">ELEV</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-gap"></div>
+      <div class="card">
+        <div class="field" style="margin-bottom:0">
+          <span class="flabel">Cover Photo</span>
+          <div class="upload-zone" id="uz-cover">
+            <input type="file" accept="image/*" capture="environment" onchange="handleUpload(this,'uz-cover','fn-cover')">
+            <div class="uz-icon">📷</div>
+            <div class="uz-text"><strong>Tap to open camera</strong><br>photograph the subject property</div>
+            <div class="uz-done" id="fn-cover"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 1: PROPERTY -->
+    <div class="screen" id="sc1">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 2 of 7 · Property Information</div>
+        <div class="screen-title">Subject <em>Property</em><br>Details</div>
+      </div>
+      <div class="card">
+        <div class="field">
+          <label class="flabel">Property Address</label>
+          <input type="text" id="f-addr" placeholder="1234 Oak St, Sugar Land TX 77478" oninput="checkPVR(this.value)" autocomplete="street-address">
+          <div class="pvr-chip" id="pvr-chip"><div class="pvr-dot"></div><span id="pvr-txt"></span></div>
+        </div>
+        <div class="field"><label class="flabel">Client Name</label><input type="text" id="f-client" placeholder="First Last" autocomplete="name"></div>
+        <div class="field"><label class="flabel">Client Phone</label><input type="text" id="f-phone" placeholder="(000) 000-0000" inputmode="tel"></div>
+        <div class="field"><label class="flabel">Year Built</label><input type="text" id="f-year" placeholder="e.g. 2005" inputmode="numeric"></div>
+        <div class="field"><label class="flabel">Square Footage</label><input type="text" id="f-sqft" placeholder="e.g. 2,400" inputmode="numeric"></div>
+        <div class="field">
+          <label class="flabel">Stories</label>
+          <select id="f-stories"><option value="">Select</option><option>1 Story</option><option>1.5 Story</option><option>2 Story</option></select>
+        </div>
+        <div class="field"><label class="flabel">Inspection Date</label><input type="text" id="f-date"></div>
+        <div class="field">
+          <label class="flabel">Foundation Type</label>
+          <select id="f-found"><option value="">Select type</option><option>Slab on Ground / Post-Tension Cable</option><option>Slab on Ground / Conventional Reinforced</option><option>Pier &amp; Beam</option><option>Slab on Ground / Type Unknown</option></select>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">PVR Zone</label>
+          <input type="text" id="f-pvr" placeholder="Auto-filled from zip or enter manually">
+          <div class="info-box">PVR is auto-suggested from the zip code in the address above. Confirm or adjust as needed for the specific site.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: ELEVATION -->
+    <div class="screen" id="sc2">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 3 of 7 · Elevation Data</div>
+        <div class="screen-title">Survey <em>Map</em><br>&amp; Readings</div>
+      </div>
+      <div class="card" id="elev-map-card">
+        <div class="field" style="margin-bottom:0">
+          <span class="flabel">Elevation Survey Map</span>
+          <div class="upload-zone" id="uz-elev">
+            <input type="file" accept="image/*,.pdf" onchange="handleUpload(this,'uz-elev','fn-elev')">
+            <div class="uz-icon">📐</div>
+            <div class="uz-text">Upload ArcSite floor plan<br><strong>with readings annotated</strong></div>
+            <div class="uz-done" id="fn-elev"></div>
+          </div>
+          <div class="info-box">Upload the annotated floor plan from ArcSite with all elevation readings marked before uploading.</div>
+        </div>
+      </div>
+      <div class="card-gap"></div>
+      <div class="card">
+        <div class="field">
+          <label class="flabel">Reference Point Location</label>
+          <select id="f-ref"><option value="">Select reference point</option><option>Center of home (standard)</option><option>Rear left corner</option><option>Rear right corner</option><option>Front left corner</option><option>Front right corner</option><option>Custom — describe in notes</option></select>
+        </div>
+        <div class="field">
+          <span class="flabel">Elevation Readings (inches)</span>
+          <div class="elev-row">
+            <div>
+              <div class="elev-sub">Highest reading</div>
+              <div class="elev-input-wrap" id="hi-wrap">
+                <button class="sign-btn positive" id="hi-sign" onclick="toggleSign('hi')" type="button">+</button>
+                <input class="elev-num" type="number" id="f-hi" placeholder="0.0" step="0.1" inputmode="decimal" oninput="calcDiff()">
+              </div>
+            </div>
+            <div>
+              <div class="elev-sub">Lowest reading</div>
+              <div class="elev-input-wrap" id="lo-wrap">
+                <button class="sign-btn negative" id="lo-sign" onclick="toggleSign('lo')" type="button">−</button>
+                <input class="elev-num" type="number" id="f-lo" placeholder="0.0" step="0.1" inputmode="decimal" oninput="calcDiff()">
+              </div>
+            </div>
+          </div>
+          <div class="diff-card" id="diff-card">
+            <div class="diff-big"><span id="diff-num">—</span>"</div>
+            <div class="diff-lbl">Total Differential</div>
+            <div class="diff-cls" id="diff-cls"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="flabel">Span Distance (feet)</label>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:8px;line-height:1.5">Approximate straight-line distance between the highest and lowest reading points.</div>
+          <input type="number" id="f-span" placeholder="e.g. 28" step="1" inputmode="decimal" oninput="calcTolerance()" style="font-size:18px;font-weight:700">
+          <div id="tol-card" style="display:none;border-radius:12px;overflow:hidden;margin-top:12px;border:1.5px solid var(--gray-200)">
+            <div style="background:var(--navy);padding:14px 16px">
+              <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px">Deflection Analysis · Reference Only</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:12px;text-align:center">
+                  <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px">Deflection Ratio</div>
+                  <div style="font-size:22px;font-weight:900;color:white;font-family:Georgia,serif;font-style:italic" id="defl-ratio">—</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:12px;text-align:center">
+                  <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px">Tilt Rate</div>
+                  <div style="font-size:22px;font-weight:900;color:white;font-family:Georgia,serif;font-style:italic" id="tilt-rate">—</div>
+                </div>
+              </div>
+            </div>
+            <div id="tol-status" style="padding:14px 16px;display:flex;align-items:flex-start;gap:12px">
+              <div id="tol-dot" style="width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px"></div>
+              <div>
+                <div id="tol-title" style="font-size:14px;font-weight:700;margin-bottom:3px"></div>
+                <div id="tol-detail" style="font-size:12px;line-height:1.6;color:var(--gray-600)"></div>
+              </div>
+            </div>
+            <div style="background:var(--gray-50);border-top:1px solid var(--gray-200);padding:10px 14px;font-size:11px;color:var(--gray-500);line-height:1.5;font-style:italic">
+              This analysis is a reference data point only. It does not determine the performance verdict — that remains the inspector's professional judgment based on the full picture.
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <span class="flabel">Elevation Classification</span>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:10px;line-height:1.5">Auto-suggested from differential — tap to confirm or override. Independent of performance verdict.</div>
+          <div class="tier-tiles">
+            <div class="tier-tile" id="tier0" onclick="pickTier(0)" style="background:var(--g-green-bg)">
+              <div class="tier-swatch" style="background:var(--g-green)"></div>
+              <div class="tier-info"><div class="tier-name" style="color:var(--g-green-txt)">Within Normal Tolerance</div><div class="tier-range" style="color:var(--g-green)">≤ 3/4"</div></div>
+              <div class="tier-ring"><div class="tier-ring-dot"></div></div>
+            </div>
+            <div class="tier-tile" id="tier1" onclick="pickTier(1)" style="background:var(--g-blue-bg)">
+              <div class="tier-swatch" style="background:var(--g-blue)"></div>
+              <div class="tier-info"><div class="tier-name" style="color:var(--g-blue-txt)">Monitor &amp; Maintain</div><div class="tier-range" style="color:var(--g-blue)">3/4" – 1.5"</div></div>
+              <div class="tier-ring"><div class="tier-ring-dot"></div></div>
+            </div>
+            <div class="tier-tile" id="tier2" onclick="pickTier(2)" style="background:var(--g-amber-bg)">
+              <div class="tier-swatch" style="background:var(--g-amber)"></div>
+              <div class="tier-info"><div class="tier-name" style="color:var(--g-amber-txt)">Elevated Deviation</div><div class="tier-range" style="color:var(--g-amber)">1.5" – 2.5"</div></div>
+              <div class="tier-ring"><div class="tier-ring-dot"></div></div>
+            </div>
+            <div class="tier-tile" id="tier3" onclick="pickTier(3)" style="background:var(--g-red-bg)">
+              <div class="tier-swatch" style="background:var(--g-red)"></div>
+              <div class="tier-info"><div class="tier-name" style="color:var(--g-red-txt)">Significant Differential Movement</div><div class="tier-range" style="color:var(--g-red)">≥ 2.5"</div></div>
+              <div class="tier-ring"><div class="tier-ring-dot"></div></div>
+            </div>
+          </div>
+          <div class="info-box amber" style="margin-top:12px">The elevation classification and performance verdict are two separate determinations. They frequently differ — that distinction is the professional judgment.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: STRESS INDICATORS -->
+    <div class="screen" id="sc3">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 4 of 7 · Field Observations</div>
+        <div class="screen-title">Stress <em>Indicators</em></div>
+      </div>
+      <div class="card">
+        <div class="info-box" style="margin-top:0;margin-bottom:16px">Tap a severity to log a finding. None = not observed. Add location for any finding rated Minor or above.</div>
+        <div class="stress-list" id="stress-list"></div>
+      </div>
+      <div class="card-gap"></div>
+      <div class="card">
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">Additional Observations</label>
+          <textarea id="f-obs" rows="5" placeholder="Any other field observations not captured above — specific rooms, unusual conditions, notable findings..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: CONTRIBUTING FACTORS -->
+    <div class="screen" id="sc4">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 5 of 7 · Contributing Factors</div>
+        <div class="screen-title">Site <em>Conditions</em></div>
+      </div>
+      <div class="card">
+        <div class="info-box" style="margin-top:0;margin-bottom:16px">Tap to activate any factor observed on site. Classify each as Observed, Precautionary, or Monitoring.</div>
+        <div class="factor-list" id="factor-list"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: VERDICT -->
+    <div class="screen" id="sc5">
+      <div class="screen-head">
+        <div class="screen-eyebrow">Step 6 of 7 · Performance Verdict</div>
+        <div class="screen-title">Foundation <em>Performance</em><br>Opinion</div>
+      </div>
+      <div class="card">
+        <div class="info-box" style="margin-top:0;margin-bottom:16px">The verdict reflects the full picture — elevation data, observed distress, site conditions, and professional judgment. It is independent of the elevation classification and may differ.</div>
+        <div class="field">
+          <span class="flabel">Performance Verdict</span>
+          <div class="verdict-tiles">
+            <div class="verdict-tile vg" id="vt-g" onclick="pickVerdict('g')">
+              <div class="vstripe" style="background:var(--g-green)"></div>
+              <div class="vinfo"><div class="vtitle">Performing as Intended</div><div class="vsub">Foundation fulfilling its structural function. No corrective action indicated.</div></div>
+            </div>
+            <div class="verdict-tile vb" id="vt-b" onclick="pickVerdict('b')">
+              <div class="vstripe" style="background:var(--g-blue)"></div>
+              <div class="vinfo"><div class="vtitle">Performing / Maintenance Recommended</div><div class="vsub">Performing but proactive steps warranted to preserve long-term performance.</div></div>
+            </div>
+            <div class="verdict-tile va" id="vt-a" onclick="pickVerdict('a')">
+              <div class="vstripe" style="background:var(--g-amber)"></div>
+              <div class="vinfo"><div class="vtitle">Borderline / Mitigation Action</div><div class="vsub">Below threshold. Contributing causes must be addressed now.</div></div>
+            </div>
+            <div class="verdict-tile vr" id="vt-r" onclick="pickVerdict('r')">
+              <div class="vstripe" style="background:var(--g-red)"></div>
+              <div class="vinfo"><div class="vtitle">Not Performing / Corrective Action</div><div class="vsub">Foundation not fulfilling its intended function. Structural concern indicated.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="flabel">Field Notes for AI Opinion</label>
+          <textarea id="f-notes" rows="6" placeholder="Key observations for the AI opinion: notable indicators, locations, patterns, movement direction, anything to emphasize in the draft..."></textarea>
+          <div class="info-box green" style="margin-top:10px">The AI drafts the full 3-paragraph performance opinion from these notes, your elevation data, and the verdict. Review and approve the draft before the report generates.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 6: REVIEW -->
+    <div class="screen" id="sc6">
+      <div class="rv-head">
+        <div class="screen-eyebrow">Step 7 of 7 · Review &amp; Generate</div>
+        <div class="screen-title">Report <em>Summary</em></div>
+      </div>
+
+      <div style="background:var(--navy);border-bottom:1px solid rgba(255,255,255,0.08);padding:16px">
+        <div class="rv-lbl" style="color:rgba(255,255,255,0.4)">Inspector</div>
+        <div class="rv-val" style="color:white" id="rv-insp">—</div>
+        <div class="rv-sub" id="rv-insp-sub" style="color:rgba(255,255,255,0.5)">Select inspector in Step 1</div>
+      </div>
+
+      <div class="verdict-banner" id="rv-banner" style="background:var(--gray-100)">
+        <div class="vb-dot" id="vb-dot" style="background:var(--gray-400)"></div>
+        <div><div class="vb-title" id="vb-title" style="color:var(--gray-800)">No verdict selected</div><div class="vb-sub" id="vb-sub" style="color:var(--gray-600)">Select a performance verdict in Step 6</div></div>
+      </div>
+
+      <div class="rv-block"><div class="rv-lbl">Property</div><div class="rv-val" id="rv-addr">—</div><div class="rv-sub" id="rv-client">—</div></div>
+      <div class="rv-block"><div class="rv-lbl">Inspection Type</div><div class="rv-val" id="rv-type">—</div></div>
+      <div class="rv-block"><div class="rv-lbl">Foundation</div><div class="rv-val" id="rv-found">—</div><div class="rv-sub" id="rv-yr"></div></div>
+      <div class="rv-block"><div class="rv-lbl">Total Differential</div><div class="rv-val" id="rv-diff">—</div><div class="rv-sub" id="rv-ecls"></div></div>
+      <div class="rv-block" style="border-bottom:none"><div class="rv-lbl">PVR Zone</div><div class="rv-val" id="rv-pvr">—</div></div>
+
+      <button class="gen-btn" onclick="doGenerate()">Generate Report with AI Opinion →</button>
+
+      <div style="text-align:center;padding:0 16px 20px;font-size:12px;color:var(--gray-400);line-height:1.6">
+        R Point by Pier-less Foundation Services<br>inspectmyslab.com · Independent · Veteran-Owned
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="btn-back" id="btn-back" onclick="navBack()" style="display:none">←</button>
+    <button class="btn-next" id="btn-next" onclick="navNext()">Continue →</button>
+  </div>
+
+</div>
+
+<script>
+const PVR={
+  "77002":"~2.0\"","77003":"~2.0\"","77004":"~2.5\"","77005":"~2.0\"","77006":"~2.0\"","77007":"~2.5\"","77008":"~2.5\"","77009":"~2.5\"",
+  "77019":"~2.0\"","77024":"~3.0\"","77025":"~2.5\"","77027":"~2.0\"","77030":"~2.0\"","77035":"~3.0\"","77036":"~3.0\"","77045":"~3.5\"",
+  "77054":"~2.5\"","77056":"~2.0\"","77057":"~2.5\"","77063":"~3.0\"","77071":"~3.5\"","77074":"~3.5\"","77077":"~3.0\"","77079":"~2.5\"",
+  "77081":"~3.0\"","77082":"~3.5\"","77083":"~4.0\"","77085":"~3.5\"","77095":"~1.5\"","77096":"~3.0\"","77099":"~4.0\"",
+  "77406":"~5.0\"","77407":"~4.5\"","77423":"~4.0\"","77441":"~4.5\"","77450":"~3.5\"","77459":"~5.0\"","77461":"~4.0\"",
+  "77469":"~4.5\"","77471":"~4.0\"","77477":"~3.5\"","77478":"~3.0\"","77479":"~3.5\"","77489":"~4.0\"","77494":"~4.5\"",
+  "77498":"~3.5\"","77545":"~5.0\"","77583":"~4.5\"","77584":"~5.0\""
+};
+
+const STRESS_ITEMS=[
+  {id:'diag-crack',name:'Diagonal Cracks'},
+  {id:'vert-crack',name:'Vertical Cracks'},
+  {id:'horiz-crack',name:'Horizontal Cracks'},
+  {id:'door-rack',name:'Door Frame Racking'},
+  {id:'sticking-doors',name:'Sticking Doors'},
+  {id:'tile-crack',name:'Tile / Grout Cracking'},
+  {id:'ceil-crack',name:'Ceiling Cracks'},
+  {id:'floor-slope',name:'Noticeable Floor Slope'},
+  {id:'drywall-sep',name:'Drywall Separation'},
+  {id:'frieze-sep',name:'Frieze Board Separation'},
+  {id:'brick-crack',name:'Brick / Masonry Cracking'},
+  {id:'counter-gap',name:'Countertop / Cabinet Gaps'},
+  {id:'window-rack',name:'Window Frame Racking'},
+];
+
+const FACTORS=[
+  {id:'tree',ico:'🌳',label:'Tree / Root Activity',fields:[
+    {type:'text',id:'tree-species',label:'Species',ph:'e.g. Oak, Pine, Cedar'},
+    {type:'text',id:'tree-dist',label:'Distance from foundation',ph:'e.g. 12 ft'},
+    {type:'text',id:'tree-loc',label:'Location on property',ph:'e.g. Front left'},
+    {type:'select',id:'tree-roots',label:'Surface Root Activity',opts:['None visible','Minimal','Moderate','Significant — radiating toward foundation']}
+  ]},
+  {id:'drainage',ico:'💧',label:'Drainage Conditions',fields:[
+    {type:'select',id:'drain-loc',label:'Location',opts:['Right side','Left side','Front','Rear','Multiple sides']},
+    {type:'select',id:'drain-sev',label:'Observed condition',opts:['Negative grade toward foundation','Water staining / concentration','Standing water evidence','Downspout discharging at foundation']}
+  ]},
+  {id:'plumbing',ico:'🔧',label:'Subsurface Plumbing',fields:[
+    {type:'select',id:'plumb-type',label:'Classification',opts:['Precautionary consideration','Correlation with elevation pattern','Active symptom present']}
+  ]},
+  {id:'pool',ico:'🏊',label:'Pool / Water Feature',fields:[
+    {type:'select',id:'pool-type',label:'Observation',opts:['Pool present — monitoring item','Unexplained water loss noted','Proximity to elevated readings']}
+  ]},
+  {id:'drought',ico:'☀️',label:'Drought / Dry Conditions',fields:[
+    {type:'select',id:'drought-sev',label:'Severity',opts:['Mild seasonal dryness','Moderate — visible soil separation','Significant — deep perimeter cracking']}
+  ]},
+  {id:'gutters',ico:'🏠',label:'Gutter / Downspout Issues',fields:[
+    {type:'text',id:'gutter-note',label:'Observation',ph:'e.g. Missing gutters at rear, downspout at foundation'}
+  ]},
+  {id:'prior-repair',ico:'🔨',label:'Prior Foundation Work',fields:[
+    {type:'text',id:'repair-note',label:'Details',ph:'e.g. Piers visible, prior leveling documented'}
+  ]},
+  {id:'custom',ico:'➕',label:'Other / Custom Factor',fields:[
+    {type:'textarea',id:'custom-note',label:'Describe the factor',ph:'Describe the observed condition and its potential relationship to the movement pattern...'}
+  ]},
+];
+
+let S=0;
+let st={insp:null,inspName:'',inspLic:'',type:null,typeLabel:'',needsElev:false,verdict:null,elevTier:null,diff:null,deflRatio:null,tiltRate:null,tolStatus:null,spanFt:null};
+let stressData={};
+let factorData={};
+
+function buildStressList(){
+  const el=document.getElementById('stress-list');
+  el.innerHTML='';
+  STRESS_ITEMS.forEach(item=>{
+    stressData[item.id]={sev:null,loc:''};
+    el.innerHTML+=`
+    <div class="stress-item" id="si-${item.id}">
+      <div class="stress-head">
+        <div class="stress-name">${item.name}</div>
+        <div class="sev-pills">
+          <div class="sev-pill" id="sp-${item.id}-minor" onclick="setSev('${item.id}','minor')">Minor</div>
+          <div class="sev-pill" id="sp-${item.id}-moderate" onclick="setSev('${item.id}','moderate')">Mod</div>
+          <div class="sev-pill" id="sp-${item.id}-excessive" onclick="setSev('${item.id}','excessive')">High</div>
+        </div>
+      </div>
+      <div class="stress-loc-wrap" id="slw-${item.id}">
+        <input class="stress-loc" id="sl-${item.id}" type="text" placeholder="Location (e.g. SW bedroom, hallway ceiling)">
+      </div>
+    </div>`;
+  });
+}
+
+function setSev(id,sev){
+  const prev=stressData[id].sev;
+  if(prev===sev){
+    stressData[id].sev=null;
+    ['minor','moderate','excessive'].forEach(s=>document.getElementById(`sp-${id}-${s}`).className='sev-pill');
+    document.getElementById(`si-${id}`).classList.remove('has-finding');
+  } else {
+    stressData[id].sev=sev;
+    ['minor','moderate','excessive'].forEach(s=>{
+      const el=document.getElementById(`sp-${id}-${s}`);
+      el.className='sev-pill'+(s===sev?' sel-'+s:'');
+    });
+    document.getElementById(`si-${id}`).classList.add('has-finding');
+  }
+}
+
+function buildFactorList(){
+  const el=document.getElementById('factor-list');
+  el.innerHTML='';
+  FACTORS.forEach(f=>{
+    factorData[f.id]={active:false,classify:null};
+    let fieldsHtml=f.fields.map(field=>{
+      let input='';
+      if(field.type==='select'){
+        input=`<select id="ff-${field.id}" style="width:100%;padding:12px;font-size:15px;border:1.5px solid var(--gray-200);border-radius:8px;background:var(--gray-50);font-family:inherit;appearance:none;-webkit-appearance:none;outline:none"><option value="">Select...</option>${field.opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+      } else if(field.type==='textarea'){
+        input=`<textarea id="ff-${field.id}" rows="3" placeholder="${field.ph}" style="width:100%;padding:12px;font-size:15px;border:1.5px solid var(--gray-200);border-radius:8px;background:var(--gray-50);font-family:inherit;outline:none;resize:none;line-height:1.5"></textarea>`;
+      } else {
+        input=`<input type="text" id="ff-${field.id}" placeholder="${field.ph}" style="width:100%;padding:12px;font-size:15px;border:1.5px solid var(--gray-200);border-radius:8px;background:var(--gray-50);font-family:inherit;outline:none">`;
+      }
+      return `<div><span class="factor-fl">${field.label}</span>${input}</div>`;
+    }).join('');
+
+    el.innerHTML+=`
+    <div class="factor-item" id="fi-${f.id}">
+      <div class="factor-head" onclick="toggleFactor('${f.id}')">
+        <div class="factor-ico">${f.ico}</div>
+        <div class="factor-lbl">${f.label}</div>
+        <div class="factor-tog" id="ft-${f.id}">+</div>
+      </div>
+      <div class="factor-body">
+        ${fieldsHtml}
+        <div><span class="factor-fl">Classification</span>
+        <div class="classify-pills">
+          <div class="cpill" id="cp-${f.id}-obs" onclick="setClassify('${f.id}','obs')">Observed Contributing Factor</div>
+          <div class="cpill" id="cp-${f.id}-pre" onclick="setClassify('${f.id}','pre')">Precautionary</div>
+          <div class="cpill" id="cp-${f.id}-mon" onclick="setClassify('${f.id}','mon')">Monitoring Item</div>
+        </div></div>
+      </div>
+    </div>`;
+  });
+}
+
+function toggleFactor(id){
+  const item=document.getElementById(`fi-${id}`);
+  const tog=document.getElementById(`ft-${id}`);
+  const isActive=item.classList.toggle('active');
+  tog.textContent=isActive?'✓':'+';
+  factorData[id].active=isActive;
+}
+
+function setClassify(fid,cls){
+  factorData[fid].classify=cls;
+  ['obs','pre','mon'].forEach(c=>{
+    const el=document.getElementById(`cp-${fid}-${c}`);
+    el.className='cpill'+(c===cls?' cp-'+c:'');
+  });
+}
+
+function nav(n){
+  if(n<0||n>6)return;
+  document.querySelectorAll('.screen').forEach((el,i)=>el.classList.toggle('active',i===n));
+  document.querySelectorAll('.stab').forEach((el,i)=>{
+    el.classList.remove('active','done');
+    if(i===n)el.classList.add('active');
+    else if(i<n)el.classList.add('done');
+  });
+  S=n;
+  document.getElementById('btn-back').style.display=n>0?'flex':'none';
+  const nxt=document.getElementById('btn-next');
+  nxt.style.display=n===6?'none':'block';
+  nxt.textContent=n===5?'Review Report →':'Continue →';
+  if(n===6)populateReview();
+  document.querySelector('.scroll-area').scrollTop=0;
+}
+
+function navNext(){nav(S+1);}
+function navBack(){nav(S-1);}
+
+function pickInsp(id,name,lic){
+  st.insp=id;st.inspName=name;st.inspLic=lic;
+  ['neil','kevin','nathan'].forEach(x=>document.getElementById('it-'+x).classList.remove('selected'));
+  document.getElementById('it-'+id).classList.add('selected');
+  const chip=document.getElementById('insp-chip');
+  chip.textContent=name;
+  chip.classList.add('set');
+}
+
+function pickType(id,label,needsElev){
+  st.type=id;st.typeLabel=label;st.needsElev=needsElev;
+  document.querySelectorAll('.type-tile').forEach(t=>t.classList.remove('selected'));
+  document.getElementById('tt-'+id).classList.add('selected');
+  document.getElementById('elev-map-card').style.display=needsElev?'block':'none';
+}
+
+function handleUpload(inp,zoneId,fnId){
+  if(!inp.files||!inp.files[0])return;
+  document.getElementById(zoneId).classList.add('filled');
+  document.getElementById(fnId).textContent='✓ '+inp.files[0].name;
+}
+
+function checkPVR(val){
+  const m=val.match(/\b7\d{4}\b/);
+  if(m&&PVR[m[0]]){
+    document.getElementById('f-pvr').value=PVR[m[0]]+' (Houston '+m[0]+')';
+    const chip=document.getElementById('pvr-chip');
+    chip.style.display='flex';
+    document.getElementById('pvr-txt').textContent='PVR Zone: '+PVR[m[0]]+' · Zip '+m[0];
+  }
+}
+
+// SIGN STATE — hi defaults positive, lo defaults negative
+const signs={hi:1,lo:-1};
+
+function toggleSign(id){
+  signs[id]*=-1;
+  const btn=document.getElementById(id+'-sign');
+  const isPos=signs[id]===1;
+  btn.textContent=isPos?'+':'−';
+  btn.className='sign-btn '+(isPos?'positive':'negative');
+  calcDiff();
+}
+
+function calcDiff(){
+  const hiRaw=parseFloat(document.getElementById('f-hi').value);
+  const loRaw=parseFloat(document.getElementById('f-lo').value);
+  if(!isNaN(hiRaw)&&!isNaN(loRaw)){
+    const hi=hiRaw*signs.hi;
+    const lo=loRaw*signs.lo;
+    const d=Math.abs(hi-lo);
+    st.diff=d;
+    document.getElementById('diff-card').style.display='block';
+    document.getElementById('diff-num').textContent=d.toFixed(1);
+    let cls,color,tier;
+    if(d<=0.75){cls='Within Normal Tolerance';color='#4a9e6f';tier=0;}
+    else if(d<=1.5){cls='Monitor & Maintain';color='#5c9ccf';tier=1;}
+    else if(d<=2.5){cls='Elevated Deviation';color='#d97706';tier=2;}
+    else{cls='Significant Differential Movement';color='#d53636';tier=3;}
+    document.getElementById('diff-cls').textContent=cls;
+    document.getElementById('diff-cls').style.color=color;
+    pickTier(tier);
+    calcTolerance();
+  }
+}
+
+function calcTolerance(){
+  const span=parseFloat(document.getElementById('f-span').value);
+  if(isNaN(span)||span<=0||st.diff===null)return;
+  const card=document.getElementById('tol-card');
+  card.style.display='block';
+
+  const spanInches=span*12;
+  const deflRatio=spanInches/st.diff;
+  const tiltPerFt=(st.diff/span).toFixed(2);
+
+  document.getElementById('defl-ratio').textContent='~1/'+Math.round(deflRatio);
+  document.getElementById('tilt-rate').textContent='~'+tiltPerFt+'" /ft';
+
+  const withinL360=deflRatio>=360;
+  const withinTilt=st.diff/span<=1/20;
+  const bothOk=withinL360&&withinTilt;
+  const eitherFail=!withinL360||!withinTilt;
+
+  const statusEl=document.getElementById('tol-status');
+  const dot=document.getElementById('tol-dot');
+  const title=document.getElementById('tol-title');
+  const detail=document.getElementById('tol-detail');
+
+  if(bothOk){
+    statusEl.style.background='var(--g-green-bg)';
+    dot.style.background='var(--g-green)';
+    title.style.color='var(--g-green-txt)';
+    title.textContent='Within Approximate Tolerance';
+    detail.textContent='The approximate deflection ratio of ~1/'+Math.round(deflRatio)+' falls within the commonly referenced L/360 structural threshold. The approximate tilt rate of ~'+tiltPerFt+'" per foot falls within the commonly referenced 1" per 20ft field reference. These are approximate reference values only.';
+  } else if(!withinL360&&!withinTilt){
+    statusEl.style.background='var(--g-red-bg)';
+    dot.style.background='var(--g-red)';
+    title.style.color='var(--g-red-txt)';
+    title.textContent='Exceeds Approximate Threshold — Both Measures';
+    detail.textContent='The approximate deflection ratio of ~1/'+Math.round(deflRatio)+' exceeds the commonly referenced L/360 threshold. The approximate tilt rate of ~'+tiltPerFt+'" per foot exceeds the commonly referenced 1" per 20ft field reference. These are approximate reference values only and do not independently determine performance.';
+  } else {
+    statusEl.style.background='var(--g-amber-bg)';
+    dot.style.background='var(--g-amber)';
+    title.style.color='var(--g-amber-txt)';
+    title.textContent='Exceeds Approximate Threshold — '+(withinL360?'Tilt Rate':'L/360 Deflection');
+    detail.textContent='The approximate deflection ratio of ~1/'+Math.round(deflRatio)+' '+(withinL360?'falls within':'exceeds')+' the commonly referenced L/360 threshold. The approximate tilt rate of ~'+tiltPerFt+'" per foot '+(withinTilt?'falls within':'exceeds')+' the commonly referenced 1" per 20ft field reference. These are approximate reference values only and do not independently determine performance.';
+  }
+
+  // store for opinion generation
+  st.deflRatio='~1/'+Math.round(deflRatio);
+  st.tiltRate='~'+tiltPerFt+'" per foot';
+  st.tolStatus=bothOk?'within':eitherFail?'exceeds':'partial';
+  st.spanFt=span;
+}
+
+
+  st.elevTier=n;
+  [0,1,2,3].forEach(i=>document.getElementById('tier'+i).classList.toggle('selected',i===n));
+}
+
+function pickVerdict(v){
+  st.verdict=v;
+  ['g','b','a','r'].forEach(x=>document.getElementById('vt-'+x).classList.remove('selected'));
+  document.getElementById('vt-'+v).classList.add('selected');
+}
+
+function populateReview(){
+  document.getElementById('rv-insp').textContent=st.inspName||'—';
+  document.getElementById('rv-insp-sub').textContent=st.inspName?'TREC #'+st.inspLic+' · Foundation Specialist · Pier-less Foundation Services':'Select inspector in Step 1';
+  document.getElementById('rv-addr').textContent=document.getElementById('f-addr').value||'—';
+  const c=document.getElementById('f-client').value,p=document.getElementById('f-phone').value;
+  document.getElementById('rv-client').textContent=[c,p].filter(Boolean).join(' · ')||'—';
+  document.getElementById('rv-type').textContent=st.typeLabel||'—';
+  document.getElementById('rv-found').textContent=document.getElementById('f-found').value||'—';
+  document.getElementById('rv-yr').textContent=document.getElementById('f-year').value?'Built '+document.getElementById('f-year').value:'';
+  document.getElementById('rv-diff').textContent=st.diff!==null?st.diff.toFixed(1)+'"':'—';
+  const tiers=['Within Normal Tolerance (≤ 3/4")','Monitor & Maintain (3/4"–1.5")','Elevated Deviation (1.5"–2.5")','Significant Differential Movement (≥ 2.5")'];
+  document.getElementById('rv-ecls').textContent=st.elevTier!==null?tiers[st.elevTier]:'';
+  document.getElementById('rv-pvr').textContent=document.getElementById('f-pvr').value||'—';
+  const vmap={
+    g:{color:'#4a9e6f',bg:'#f0faf3',bd:'#b6dfc3',title:'Performing as Intended',sub:'Foundation fulfilling its structural function — no corrective action indicated'},
+    b:{color:'#5c9ccf',bg:'#eef6fd',bd:'#b8d9f2',title:'Performing / Maintenance Recommended',sub:'Performing but proactive steps warranted to preserve long-term performance'},
+    a:{color:'#d97706',bg:'#fffbeb',bd:'#fcd34d',title:'Borderline / Mitigation Action',sub:'Contributing causes must be addressed now'},
+    r:{color:'#d53636',bg:'#fff5f5',bd:'#fca5a5',title:'Not Performing / Corrective Action',sub:'Foundation not fulfilling its intended function — structural concern indicated'}
+  };
+  if(st.verdict&&vmap[st.verdict]){
+    const v=vmap[st.verdict];
+    const banner=document.getElementById('rv-banner');
+    banner.style.background=v.bg;
+    banner.style.borderColor=v.bd;
+    document.getElementById('vb-dot').style.background=v.color;
+    document.getElementById('vb-title').textContent=v.title;
+    document.getElementById('vb-title').style.color=v.color;
+    document.getElementById('vb-sub').textContent=v.sub;
+    document.getElementById('vb-sub').style.color=v.color;
+  }
+}
+
+function doGenerate(){
+  const hiRaw=parseFloat(document.getElementById('f-hi').value)||0;
+  const loRaw=parseFloat(document.getElementById('f-lo').value)||0;
+  const hiVal=(hiRaw*signs.hi).toFixed(1);
+  const loVal=(loRaw*signs.lo).toFixed(1);
+  const tiers=['Within Normal Tolerance','Monitor & Maintain','Elevated Deviation','Significant Differential Movement'];
+  const vLabels={g:'Performing as Intended',b:'Performing / Maintenance Recommended',a:'Borderline / Mitigation Action',r:'Not Performing / Corrective Action'};
+  const stressLog=STRESS_ITEMS.filter(i=>stressData[i.id].sev).map(i=>`${i.name}: ${stressData[i.id].sev}${document.getElementById('sl-'+i.id).value?' — '+document.getElementById('sl-'+i.id).value:''}`).join('\n') || 'None logged';
+  const factorLog=FACTORS.filter(f=>factorData[f.id].active).map(f=>`${f.label} (${factorData[f.id].classify||'unclassified'})`).join('\n')||'None logged';
+
+  const addr=document.getElementById('f-addr').value||'Subject Property';
+  alert('Report data ready — AI opinion generation coming in next build phase.\n\nInspector: '+st.inspName+'\nProperty: '+addr+'\nVerdict: '+(st.verdict?vLabels[st.verdict]:'Not set')+'\nHighest: '+hiVal+'"\nLowest: '+loVal+'"\nDifferential: '+(st.diff!==null?st.diff.toFixed(1)+'"':'N/A'));
+}
+
+// INIT
+document.getElementById('f-date').value=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+document.getElementById('elev-map-card').style.display='none';
+document.getElementById('btn-back').style.display='none';
+buildStressList();
+buildFactorList();
+</script>
+</body>
+</html>
+HTMLEOF
