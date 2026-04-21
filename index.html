@@ -193,18 +193,18 @@ textarea{resize:none;line-height:1.6}
 .screen{display:none}
 .screen.on{display:block}
 
-.vtile{display:flex;flex-direction:column;border:2px solid var(--g200);border-radius:14px;background:white;cursor:pointer;transition:all .2s;overflow:hidden}
+.vtile{display:flex;flex-direction:column;border:2px solid var(--g200);border-radius:12px;background:white;cursor:pointer;transition:all .2s;overflow:hidden}
 .vtile:active{transform:scale(.98)}
-.vtile.sel{outline:3px solid var(--navy);outline-offset:2px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
-.vt-top{display:flex;align-items:center;gap:14px;padding:18px 18px 14px}
-.vt-grade{font-size:28px;font-weight:900;letter-spacing:.5px;line-height:1}
-.vt-check{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.12);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all .2s;background:rgba(255,255,255,.4)}
+.vtile.sel{outline:3px solid var(--navy);outline-offset:2px;box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.vt-top{display:flex;align-items:center;gap:10px;padding:12px 14px 10px}
+.vt-grade{font-size:20px;font-weight:900;letter-spacing:.3px;line-height:1}
+.vt-check{width:24px;height:24px;border-radius:50%;border:2px solid rgba(0,0,0,.12);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all .2s;background:rgba(255,255,255,.4)}
 .vtile.sel .vt-check{background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.2)}
-.vchkmark{width:10px;height:7px;border-left:2.5px solid white;border-bottom:2.5px solid white;transform:rotate(-45deg) translateY(-1px);display:none}
+.vchkmark{width:8px;height:5px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px);display:none}
 .vtile.sel .vchkmark{display:block}
-.vt-bot{padding:0 18px 16px;border-top:1px solid rgba(0,0,0,.07)}
-.vt-tech{font-size:13px;font-weight:700;margin-top:10px;opacity:.85}
-.vt-desc{font-size:12px;margin-top:4px;opacity:.7;line-height:1.5}
+.vt-bot{padding:0 14px 12px;border-top:1px solid rgba(0,0,0,.07)}
+.vt-tech{font-size:12px;font-weight:700;margin-top:8px;opacity:.85}
+.vt-desc{font-size:11px;margin-top:2px;opacity:.65;line-height:1.4}
 .vt-g{background:linear-gradient(135deg,#e8f8ef 0%,#d4f0e0 100%);border-color:var(--grnbd)}
 .vt-g .vt-grade{color:var(--grntx)}
 .vt-g .vt-bot{background:rgba(74,158,111,.08)}
@@ -510,19 +510,19 @@ textarea{resize:none;line-height:1.6}
       <span class="flbl">Performance Verdict</span>
       <div class="vtiles" style="display:flex;flex-direction:column;gap:10px">
         <div class="vtile vt-g" id="vt0" onclick="pickV(0)">
-          <div class="vt-top"><div><div style="font-size:11px;letter-spacing:2px;font-weight:700;text-transform:uppercase;color:var(--grn);margin-bottom:4px">Client Rating</div><div class="vt-grade">GOOD</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
+          <div class="vt-top"><div><div style="font-size:9px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase;color:var(--grn);margin-bottom:2px">Client Rating</div><div class="vt-grade">GOOD</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
           <div class="vt-bot"><div class="vt-tech">Performing as Intended</div><div class="vt-desc">Foundation fulfilling its structural function. No corrective action indicated.</div></div>
         </div>
         <div class="vtile vt-b" id="vt1" onclick="pickV(1)">
-          <div class="vt-top"><div><div style="font-size:11px;letter-spacing:2px;font-weight:700;text-transform:uppercase;color:var(--blu);margin-bottom:4px">Client Rating</div><div class="vt-grade">AVERAGE</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
+          <div class="vt-top"><div><div style="font-size:9px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase;color:var(--blu);margin-bottom:2px">Client Rating</div><div class="vt-grade">AVERAGE</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
           <div class="vt-bot"><div class="vt-tech">Performing / Maintenance Recommended</div><div class="vt-desc">Performing but proactive steps warranted to preserve long-term performance.</div></div>
         </div>
         <div class="vtile vt-a" id="vt2" onclick="pickV(2)">
-          <div class="vt-top"><div><div style="font-size:11px;letter-spacing:2px;font-weight:700;text-transform:uppercase;color:var(--amb);margin-bottom:4px">Client Rating</div><div class="vt-grade">BELOW AVERAGE</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
+          <div class="vt-top"><div><div style="font-size:9px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase;color:var(--amb);margin-bottom:2px">Client Rating</div><div class="vt-grade">BELOW AVERAGE</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
           <div class="vt-bot"><div class="vt-tech">Borderline / Mitigation Action</div><div class="vt-desc">Below threshold. Contributing causes must be addressed now.</div></div>
         </div>
         <div class="vtile vt-r" id="vt3" onclick="pickV(3)">
-          <div class="vt-top"><div><div style="font-size:11px;letter-spacing:2px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:4px">Client Rating</div><div class="vt-grade">POOR</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
+          <div class="vt-top"><div><div style="font-size:9px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:2px">Client Rating</div><div class="vt-grade">POOR</div></div><div class="vt-check"><div class="vchkmark"></div></div></div>
           <div class="vt-bot"><div class="vt-tech">Not Performing / Corrective Action</div><div class="vt-desc">Foundation not fulfilling its intended function. Structural concern indicated.</div></div>
         </div>
       </div>
@@ -590,6 +590,10 @@ textarea{resize:none;line-height:1.6}
 
 </div>
 <script>
+// ─────────────────────────────────────────────────────
+// PASTE YOUR ANTHROPIC API KEY BELOW (keep the quotes)
+var ANTHROPIC_KEY='YOUR-API-KEY-HERE';
+// ─────────────────────────────────────────────────────
 var S=0;
 var signs={hi:1,lo:-1};
 var st={insp:null,iname:'',ilic:'',type:null,tlabel:'',needsElev:false,verdict:null,tier:null,diff:null,fu:null,det:null,detloc:null,defl:null,tilt:null,tolst:null,span:null,pr:null,prev:[]};
@@ -612,6 +616,7 @@ var PR_ITEMS=[
 
 var FACTORS=[
   {id:'tree',ico:'&#127795;',lbl:'Tree / Root Activity',fields:[
+    {t:'text',id:'tcount',lbl:'Number of Trees',ph:'e.g. 1, 2, 3...'},
     {t:'text',id:'tspec',lbl:'Species',ph:'e.g. Oak, Pine, Cedar'},
     {t:'text',id:'tdist',lbl:'Distance from foundation',ph:'e.g. 12 ft'},
     {t:'text',id:'tloc',lbl:'Location on property',ph:'e.g. Front left'},
@@ -1034,7 +1039,7 @@ function draftOpinion(){
 
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
     body:JSON.stringify({
       model:'claude-sonnet-4-20250514',
       max_tokens:1000,
