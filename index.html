@@ -36,7 +36,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,"Helvetica Neue"
 .slbl{font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.5px;text-transform:uppercase}
 .stab.done .slbl{color:rgba(255,255,255,.45)}
 .stab.active .slbl{color:var(--cyan)}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:88px}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:100px}
 .shead{background:var(--navy);padding:18px 16px 16px}
 .seyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
 .stitle{font-size:24px;font-weight:700;color:white;line-height:1.2}
@@ -185,7 +185,7 @@ textarea{resize:none;line-height:1.6}
 .dlvico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .dlvtit{font-size:15px;font-weight:700;color:var(--navy)}
 .dlvsub{font-size:12px;color:var(--g400);margin-top:2px}
-.botnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:white;border-top:1px solid var(--g200);padding:10px 16px;padding-bottom:max(10px,env(safe-area-inset-bottom));display:flex;gap:10px;z-index:100}
+.botnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:white;border-top:1px solid var(--g200);padding:10px 16px;padding-bottom:max(10px,env(safe-area-inset-bottom));display:flex;gap:10px;z-index:200}
 .btnback{flex:0 0 56px;height:54px;border:1.5px solid var(--g200);border-radius:12px;background:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--g600)}
 .btnback:active{background:var(--g100)}
 .btnnext{flex:1;height:54px;background:var(--blue);color:white;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
@@ -523,17 +523,26 @@ textarea{resize:none;line-height:1.6}
         </div>
       </div>
 
-      <div class="field" style="margin-bottom:0;margin-top:4px">
-      <button class="genbtn" id="draftbtn" onclick="draftOpinion()" style="margin:0;width:100%">Draft AI Performance Opinion</button>
-      <div class="opinion-box" id="opinionbox">
-        <div class="opinion-head">
-          <div class="opinion-spinner" id="opspinner"></div>
-          <div class="opinion-status" id="opstatus">Generating Pier-less performance opinion...</div>
-        </div>
-        <div class="opinion-text">
-          <textarea class="opinion-ta" id="opinionta" rows="12" placeholder="AI opinion will appear here..."></textarea>
-          <button class="approve-btn" id="approvebtn" onclick="approveOpinion()" style="display:none">Approve Opinion &amp; Continue to Review</button>
-          <div class="approved-badge" id="approvedbadge">&#10003; Opinion Approved -- Ready for Report</div>
+      <div class="field">
+        <span class="flbl">Inspector Notes for Opinion</span>
+        <div style="font-size:12px;color:var(--g600);margin-bottom:8px;line-height:1.5">Describe key observations, movement patterns, locations of concern, and anything the AI should emphasize. The more detail here, the better the draft.</div>
+        <textarea id="fnotes" rows="7" placeholder="e.g. Diagonal cracks concentrated at SW corner near large oak tree, door sticking in master bedroom, slab visibly lower on east side, client reports cracks appeared after drought last summer, perimeter readings show 1.9&#34; differential with interior relatively level..."></textarea>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <span class="flbl">Generate Performance Opinion</span>
+        <div style="font-size:12px;color:var(--g600);margin-bottom:12px;line-height:1.5">Choose how you want to create the performance opinion for this report.</div>
+        <button class="genbtn" id="draftbtn" onclick="draftOpinion()" style="margin:0 0 10px 0;width:100%;background:var(--navy)">&#9881; Draft with AI</button>
+        <button onclick="manualOpinion()" style="display:block;width:100%;padding:16px;background:white;color:var(--navy);border:1.5px solid var(--g200);border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px">&#9998; Write Manually</button>
+        <div class="opinion-box" id="opinionbox">
+          <div class="opinion-head">
+            <div class="opinion-spinner" id="opspinner" style="display:none"></div>
+            <div class="opinion-status" id="opstatus">Generating Pier-less performance opinion...</div>
+          </div>
+          <div class="opinion-text">
+            <textarea class="opinion-ta" id="opinionta" rows="14" placeholder="Opinion will appear here. You can edit before approving."></textarea>
+            <button class="approve-btn" id="approvebtn" onclick="approveOpinion()" style="display:none">&#10003; Approve &amp; Continue to Review</button>
+            <div class="approved-badge" id="approvedbadge">&#10003; Opinion Approved -- Ready for Report</div>
+          </div>
         </div>
       </div>
     </div>
@@ -969,6 +978,25 @@ function pickV(n){
 var opinionApproved=false;
 var opinionText='';
 
+function manualOpinion(){
+  var box=document.getElementById('opinionbox');
+  var ta=document.getElementById('opinionta');
+  var spinner=document.getElementById('opspinner');
+  var status=document.getElementById('opstatus');
+  var appbtn=document.getElementById('approvebtn');
+  var badge=document.getElementById('approvedbadge');
+  box.style.display='block';
+  spinner.style.display='none';
+  status.textContent='Write your opinion below, then approve to continue';
+  ta.value='';
+  ta.style.display='block';
+  ta.placeholder='Write the performance opinion here in your own words...';
+  ta.focus();
+  appbtn.style.display='block';
+  badge.style.display='none';
+  opinionApproved=false;
+}
+
 function draftOpinion(){
   if(st.verdict===null){alert('Please select a performance verdict first.');return;}
   var box=document.getElementById('opinionbox');
@@ -979,7 +1007,7 @@ function draftOpinion(){
   var badge=document.getElementById('approvedbadge');
   box.style.display='block';
   spinner.style.display='block';
-  status.textContent='Generating Pier-less performance opinion...';
+  status.textContent='Drafting opinion...';
   ta.value=''; ta.style.display='none';
   appbtn.style.display='none'; badge.style.display='none';
   opinionApproved=false;
@@ -993,28 +1021,26 @@ function draftOpinion(){
     var i=SIDS.indexOf(id);
     return SITEMS[i]+' ('+sdata[id].sev+(sdata[id].loc?' -- '+sdata[id].loc:'')+')';
   });
-
   var factorHits=FACTORS.filter(function(f){return fdata[f.id]&&fdata[f.id].on;}).map(function(f){
     return f.lbl+(fdata[f.id].cls?' ('+fdata[f.id].cls+')':'');
   });
-
   var prEvLbls={knockouts:'visible concrete knockouts',patched:'patched concrete at perimeter',disturbed:'disturbed soil near foundation',highperim:'high perimeter readings inconsistent with interior',piers:'visible piers or brackets',docs:'prior repair documentation provided',reported:'client-reported prior repair',other:'other repair evidence'};
   var prText=st.pr==='yes'?'CONFIRMED. Evidence: '+st.prev.map(function(e){return prEvLbls[e]||e;}).join(', '):'No evidence observed';
 
   var lines=[
     'You are writing a professional foundation performance opinion for Pier-less Foundation Services LLC, a Texas-based independent foundation inspection company.',
-    'Write in the established Pier-less voice: clinical, precise, authoritative, and data-grounded.',
-    'Avoid alarming language but never minimize findings. Use paragraph form only -- no bullet points, no headers. Write exactly three paragraphs.',
+    'Write in the Pier-less voice: clinical, precise, authoritative, and data-grounded. Avoid alarming language but never minimize findings.',
+    'Use paragraph form only -- no bullet points, no headers, no bold text. Write exactly three paragraphs.',
     '',
     'INSPECTION DATA:',
-    'Property: '+(document.getElementById('faddr').value||'address not entered'),
+    'Property: '+(document.getElementById('faddr').value||'not entered'),
     'Foundation type: '+(document.getElementById('ffound').value||'not recorded'),
     'Inspection type: '+st.tlabel,
     'Year built: '+(document.getElementById('fyear').value||'not recorded'),
     'PVR Zone: '+(document.getElementById('fpvr').value||'not recorded'),
     '',
     'ELEVATION:',
-    'Approximate differential: '+(st.diff!==null?'approx. '+st.diff.toFixed(1)+'"':'not recorded'),
+    'Approximate total differential: '+(st.diff!==null?'approx. '+st.diff.toFixed(1)+'"':'not recorded'),
     'Elevation classification: '+(st.tier!==null?tiers[st.tier]:'not recorded'),
     st.defl?'Approximate deflection ratio: '+st.defl+' | Approximate tilt rate: '+st.tilt:'',
     '',
@@ -1022,27 +1048,39 @@ function draftOpinion(){
     'DETECTABILITY: '+(st.det==='no'?'Not detectable without equipment':st.det==='yes'?'Observable without equipment':'not recorded')+(st.detloc?' -- location: '+st.detloc:''),
     '',
     'STRESS INDICATORS: '+(stressHits.length?stressHits.join('; '):'None logged'),
-    '',
     'CONTRIBUTING FACTORS: '+(factorHits.length?factorHits.join('; '):'None identified'),
-    '',
     'PRIOR FOUNDATION REPAIR: '+prText,
     '',
-    'ADDITIONAL FIELD NOTES: '+(document.getElementById('fnotes').value||'None provided'),
-    'OBSERVATIONS: '+(document.getElementById('fobs').value||'None provided'),
+    'INSPECTOR NOTES: '+(document.getElementById('fnotes').value||'None provided'),
     '',
     'VERDICT: '+vGrades[st.verdict]+' -- '+vLbls[st.verdict],
     '',
     'Write the three-paragraph performance opinion now.',
-    'Paragraph 1: describe the foundation condition, elevation findings, and what the numbers indicate.',
-    'Paragraph 2: address functional utility, detectability, and stress indicators observed.',
-    'Paragraph 3: identify contributing factors and prior repair implications if any, then state the verdict with rationale.',
-    'Close with: This evaluation represents the independent professional opinion of Pier-less Foundation Services LLC and is not an engineering report.'
+    'Paragraph 1: describe the foundation condition and elevation findings.',
+    'Paragraph 2: address functional utility, detectability, and stress indicators.',
+    'Paragraph 3: identify contributing factors, note prior repair if confirmed, state the verdict with rationale.',
+    'End with: This evaluation represents the independent professional opinion of Pier-less Foundation Services LLC and is not an engineering report.'
   ];
   var prompt=lines.filter(function(l){return l!==undefined;}).join('\n');
 
+  var timedOut=false;
+  var timer=setTimeout(function(){
+    timedOut=true;
+    spinner.style.display='none';
+    status.textContent='Request timed out. Check your API key and connection, then retry.';
+    ta.value='The AI opinion request timed out.\n\nCommon causes:\n1. API key not set (open the file, find ANTHROPIC_KEY and add your key)\n2. Safari popup blocker\n3. Network issue\n\nYou can also tap "Write Manually" to write the opinion yourself.';
+    ta.style.display='block';
+    appbtn.style.display='none';
+  }, 20000);
+
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':ANTHROPIC_KEY,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
     body:JSON.stringify({
       model:'claude-sonnet-4-20250514',
       max_tokens:1000,
@@ -1051,24 +1089,31 @@ function draftOpinion(){
   })
   .then(function(r){return r.json();})
   .then(function(data){
+    if(timedOut) return;
+    clearTimeout(timer);
     spinner.style.display='none';
     if(data.content&&data.content[0]&&data.content[0].text){
-      var text=data.content[0].text;
-      opinionText=text;
-      ta.value=text;
+      opinionText=data.content[0].text;
+      ta.value=opinionText;
       ta.style.display='block';
       appbtn.style.display='block';
-      status.textContent='Opinion drafted -- review and edit before approving';
+      status.textContent='Draft complete -- edit as needed, then approve';
+    } else if(data.error){
+      status.textContent='API error: '+data.error.message;
+      ta.value='Error: '+data.error.message+'\n\nCheck your API key or use "Write Manually".';
+      ta.style.display='block';
     } else {
-      status.textContent='Generation failed -- check connection and retry';
-      ta.value='Error: '+(data.error?data.error.message:JSON.stringify(data));
+      status.textContent='Unexpected response -- use Write Manually';
+      ta.value=JSON.stringify(data);
       ta.style.display='block';
     }
   })
   .catch(function(err){
+    if(timedOut) return;
+    clearTimeout(timer);
     spinner.style.display='none';
-    status.textContent='Network error -- retry';
-    ta.value='Error: '+err.message;
+    status.textContent='Network error -- check API key or use Write Manually';
+    ta.value='Error: '+err.message+'\n\nIf your API key is not set, open the HTML file and find ANTHROPIC_KEY near the top of the script.\n\nYou can also tap "Write Manually" to write the opinion yourself.';
     ta.style.display='block';
   });
 }
